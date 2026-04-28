@@ -235,6 +235,11 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 		await this.sqlCipherFacade.run(query, params)
 	}
 
+	async deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+		const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${groupId}`
+		await this.sqlCipherFacade.run(query, params)
+	}
+
 	async getLastUpdateTime(): Promise<LastUpdateTime> {
 		const time = await this.getMetadata("lastUpdateTime")
 		return time ? {type: "recorded", time} : {type: "never"}
@@ -315,6 +320,7 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 			}
 
 		}
+		await this.deleteLastBatchIdForGroup(owner)
 	}
 
 	private async putMetadata<K extends keyof OfflineDbMeta>(key: K, value: OfflineDbMeta[K]): Promise<void> {
