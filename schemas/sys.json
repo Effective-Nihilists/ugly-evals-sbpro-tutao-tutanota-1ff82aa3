@@ -1,0 +1,55 @@
+{
+	"app": "sys",
+	"versions": [
+		{
+			"version": 75,
+			"changes": [
+				{
+					"name": "BooleanToNumberValue",
+					"sourceType": "GiftCard",
+					"info": "BooleanToNumberValue GiftCard/usable."
+				},
+				{
+					"name": "RenameAttribute",
+					"sourceType": "GiftCard",
+					"info": "RenameAttribute GiftCard: usable -> status."
+				},
+				{
+					"name": "AddValue",
+					"sourceType": "GiftCard",
+					"info": "AddValue GiftCard/migrated/1993."
+				}
+			]
+		},
+		{
+			"version": 76,
+			"changes": [
+				{
+					"name": "RemoveValue",
+					"sourceType": "GiftCard",
+					"info": "RemoveValue GiftCard/country/1780."
+				}
+			]
+		},
+		{
+			"version": 79,
+			"changes": [
+				{
+					"name": "AddAssociation",
+					"sourceType": "CustomerInfo",
+					"info": "AddAssociation CustomerInfo/terminationRequest/LIST_ELEMENT_ASSOCIATION/2014."
+				}
+			]
+		},
+		{
+			"version": 80,
+			"changes": [
+				{
+					"name": "AddValue",
+					"sourceType": "CustomerProperties",
+					"info": "AddValue CustomerProperties/usageDataOptedOut/2025."
+				}
+			]
+		}
+	]
+}

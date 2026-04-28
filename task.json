@@ -1,0 +1,18 @@
+{
+  "name": "sbpro-tutao-tutanota-1ff82aa3",
+  "kind": "bug-fix",
+  "turns": [
+    "Read TICKET.md, then explore the codebase and fix the issue. The grader will apply your patch inside the official SWE-bench Pro Docker image and run the tests."
+  ],
+  "budget": {
+    "maxTurns": 60,
+    "maxCostUsd": 6,
+    "timeoutMs": 1800000
+  },
+  "successCriteria": "Edits to source files make the fail_to_pass tests pass without regressing pass_to_pass tests, when applied via the SWE-bench Pro grader. Source: instance_tutao__tutanota-1ff82aa365763cee2d609c9d19360ad87fdf2ec7-vc4e41fd0029957297843cb9dec4a25c7c756f029",
+  "tags": [
+    "swe-bench-pro",
+    "ts",
+    "agentic"
+  ]
+}
