@@ -29,6 +29,7 @@ export class EphemeralCacheStorage implements CacheStorage {
 	private readonly customCacheHandlerMap: CustomCacheHandlerMap = new CustomCacheHandlerMap()
 	private lastUpdateTime: number | null = null
 	private userId: Id | null = null
+	private readonly lastBatchIdPerGroup: Map<Id, Id> = new Map()
 
 	init({userId}: EphemeralStorageInitArgs) {
 		this.userId = userId
@@ -39,6 +40,7 @@ export class EphemeralCacheStorage implements CacheStorage {
 		this.entities.clear()
 		this.lists.clear()
 		this.lastUpdateTime = null
+		this.lastBatchIdPerGroup.clear()
 	}
 
 	/**
@@ -213,10 +215,11 @@ export class EphemeralCacheStorage implements CacheStorage {
 	}
 
 	getLastBatchIdForGroup(groupId: Id): Promise<Id | null> {
-		return Promise.resolve(null)
+		return Promise.resolve(this.lastBatchIdPerGroup.get(groupId) ?? null)
 	}
 
 	putLastBatchIdForGroup(groupId: Id, batchId: Id): Promise<void> {
+		this.lastBatchIdPerGroup.set(groupId, batchId)
 		return Promise.resolve()
 	}
 
@@ -273,5 +276,6 @@ export class EphemeralCacheStorage implements CacheStorage {
 				cacheForType.delete(listId)
 			}
 		}
+		this.lastBatchIdPerGroup.delete(owner)
 	}
 }
