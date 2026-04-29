@@ -724,6 +724,7 @@ export class DefaultEntityRestCache implements EntityRestCache {
 		for (const ship of removedShips) {
 			console.log("Lost membership on ", ship._id, ship.groupType)
 			await this.storage.deleteAllOwnedBy(ship.group)
+			await this.storage.deleteLastBatchIdForGroup(ship.group)
 		}
 	}
 
