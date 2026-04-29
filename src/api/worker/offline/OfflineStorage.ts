@@ -235,6 +235,35 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 		await this.sqlCipherFacade.run(query, params)
 	}
 
+	async deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+		const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${groupId}`
+		await this.sqlCipherFacade.run(query, params)
+	}
+
+	async deleteAllOwnedBy(owner: Id): Promise<void> {
+		{
+			const {query, params} = sql`DELETE FROM element_entities WHERE ownerGroup = ${owner}`
+			await this.sqlCipherFacade.run(query, params)
+		}
+		{
+			// first, check which list Ids contain entities owned by the lost group
+			const {query, params} = sql`SELECT listId, type FROM list_entities WHERE ownerGroup = ${owner}`
+			const rangeRows = await this.sqlCipherFacade.all(query, params)
+			const rows = rangeRows.map(row => untagSqlObject(row) as {listId: string, type: string})
+			const listIdsByType: Map<string, Set<Id>> = groupByAndMapUniquely(rows, (row) => row.type, row => row.listId)
+			for (const [type, listIds] of listIdsByType.entries()) {
+				// delete the ranges for those listIds
+				const deleteRangeQuery = sql`DELETE FROM ranges WHERE type = ${type} AND listId IN ${paramList(Array.from(listIds))}`
+				await this.sqlCipherFacade.run(deleteRangeQuery.query, deleteRangeQuery.params)
+				// delete all entities that have one of those list Ids.
+				const deleteEntitiesQuery = sql`DELETE FROM list_entities WHERE type = ${type} AND listId IN ${paramList(Array.from(listIds))}`
+				await this.sqlCipherFacade.run(deleteEntitiesQuery.query, deleteEntitiesQuery.params)
+			}
+
+		}
+		await this.deleteLastBatchIdForGroup(owner)
+	}
+
 	async getLastUpdateTime(): Promise<LastUpdateTime> {
 		const time = await this.getMetadata("lastUpdateTime")
 		return time ? {type: "recorded", time} : {type: "never"}
@@ -314,6 +343,10 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 				await this.sqlCipherFacade.run(deleteEntitiesQuery.query, deleteEntitiesQuery.params)
 			}
 
+		}
+		{
+			const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}`
+			await this.sqlCipherFacade.run(query, params)
 		}
 	}
 
