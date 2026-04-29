@@ -315,6 +315,10 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 			}
 
 		}
+		await this.sqlCipherFacade.run(
+			sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}`.query,
+			sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}`.params,
+		)
 	}
 
 	private async putMetadata<K extends keyof OfflineDbMeta>(key: K, value: OfflineDbMeta[K]): Promise<void> {
