@@ -251,6 +251,10 @@ export class EphemeralCacheStorage implements CacheStorage {
 		return assertNotNull(this.userId, "No user id, not initialized?")
 	}
 
+	async deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+		this.lastUpdateBatchIdPerGroupId.delete(groupId)
+	}
+
 	async deleteAllOwnedBy(owner: Id): Promise<void> {
 		for (const typeMap of this.entities.values()) {
 			for (const [id, entity] of typeMap.entries()) {

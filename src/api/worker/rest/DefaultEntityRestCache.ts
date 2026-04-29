@@ -155,6 +155,8 @@ export interface CacheStorage extends ExposedCacheStorage {
 
 	getLastBatchIdForGroup(groupId: Id): Promise<Id | null>;
 
+	deleteLastBatchIdForGroup(groupId: Id): Promise<void>
+
 	purgeStorage(): Promise<void>
 
 	putLastUpdateTime(value: number): Promise<void>
