@@ -863,6 +863,52 @@ export function testEntityRestCache(name: string, getStorage: (userId: Id) => Pr
 					o(deletedRange).equals(null)
 				})
 
+				o("membership change deletes the batch id for the lost group", async function () {
+					const userId = "userId"
+					const calendarGroupId = "calendarGroupId"
+					const initialUser = createUser({
+						_id: userId,
+						memberships: [
+							createGroupMembership({
+								_id: "mailShipId",
+								groupType: GroupType.Mail,
+							}),
+							createGroupMembership({
+								_id: "calendarShipId",
+								group: calendarGroupId,
+								groupType: GroupType.Calendar,
+							})
+						]
+					})
+
+					await storage.put(initialUser)
+
+					const updatedUser = createUser({
+						_id: userId,
+						memberships: [
+							createGroupMembership({
+								_id: "mailShipId",
+								groupType: GroupType.Mail,
+							}),
+						]
+					})
+
+					entityRestClient.load = func<EntityRestClient["load"]>()
+					when(entityRestClient.load(UserTypeRef, userId)).thenResolve(updatedUser)
+
+					storage.getUserId = () => userId
+
+					// Put a batch ID for the calendar group
+					await storage.putLastBatchIdForGroup(calendarGroupId, "someBatchId")
+
+					await cache.entityEventsReceived(makeBatch([
+						createUpdate(UserTypeRef, "", userId, OperationType.UPDATE)
+					]))
+
+					o(await storage.getLastBatchIdForGroup(calendarGroupId))
+						.equals(null)("batch id has been deleted for the lost group")
+				})
+
 				o("membership change but for another user does nothing", async function () {
 					const userId = "userId"
 					const calendarGroupId = "calendarGroupId"
