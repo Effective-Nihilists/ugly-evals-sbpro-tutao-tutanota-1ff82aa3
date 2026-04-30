@@ -293,6 +293,24 @@ o.spec("OfflineStorage", function () {
 				o(await getAllIdsForType(MailTypeRef)).deepEquals([getElementId(mailAfter)])
 				o(await getAllIdsForType(FileTypeRef)).deepEquals([getElementId(fileAfter)])
 			})
+
+			o("deleteLastBatchIdForGroup removes the batch id", async function () {
+				const groupId = "testGroup"
+				const batchId = "batch123"
+
+				await storage.init({userId, databaseKey, timeRangeDays, forceNewDatabase: false})
+
+				// Verify initial state is null
+				o(await storage.getLastBatchIdForGroup(groupId)).equals(null)("batch id initially null")
+
+				// Insert a batch id
+				await storage.putLastBatchIdForGroup(groupId, batchId)
+				o(await storage.getLastBatchIdForGroup(groupId)).equals(batchId)("batch id stored")
+
+				// Delete the batch id
+				await storage.deleteLastBatchIdForGroup(groupId)
+				o(await storage.getLastBatchIdForGroup(groupId)).equals(null)("batch id deleted")
+			})
 		})
 	})
 
