@@ -212,6 +212,10 @@ export class EphemeralCacheStorage implements CacheStorage {
 		return this.lists.get(typeRefToPath(typeRef))?.get(listId)?.allRange ?? []
 	}
 
+	deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+		return Promise.resolve()
+	}
+
 	getLastBatchIdForGroup(groupId: Id): Promise<Id | null> {
 		return Promise.resolve(null)
 	}

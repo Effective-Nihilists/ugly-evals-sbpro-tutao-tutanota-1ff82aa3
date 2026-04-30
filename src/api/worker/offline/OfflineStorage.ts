@@ -230,6 +230,11 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 		return (row?.batchId?.value ?? null) as Id | null
 	}
 
+	async deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+		const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${groupId}`
+		await this.sqlCipherFacade.run(query, params)
+	}
+
 	async putLastBatchIdForGroup(groupId: Id, batchId: Id): Promise<void> {
 		const {query, params} = sql`INSERT OR REPLACE INTO lastUpdateBatchIdPerGroupId VALUES (${groupId}, ${batchId})`
 		await this.sqlCipherFacade.run(query, params)
