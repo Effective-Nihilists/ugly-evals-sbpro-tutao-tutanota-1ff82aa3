@@ -184,4 +184,8 @@ export class LateInitializedCacheStorageImpl implements CacheStorageLateInitiali
 	async deleteAllOwnedBy(owner: Id): Promise<void> {
 		return this.inner.deleteAllOwnedBy(owner)
 	}
+
+	deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+		return this.inner.deleteLastBatchIdForGroup(groupId)
+	}
 }
