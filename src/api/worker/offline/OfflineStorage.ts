@@ -317,6 +317,11 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 		}
 	}
 
+	async deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+		const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${groupId}`
+		await this.sqlCipherFacade.run(query, params)
+	}
+
 	private async putMetadata<K extends keyof OfflineDbMeta>(key: K, value: OfflineDbMeta[K]): Promise<void> {
 		const {query, params} = sql`INSERT OR REPLACE INTO metadata VALUES (${key}, ${cborg.encode(value)})`
 		await this.sqlCipherFacade.run(query, params)
