@@ -155,6 +155,8 @@ export interface CacheStorage extends ExposedCacheStorage {
 
 	getLastBatchIdForGroup(groupId: Id): Promise<Id | null>;
 
+	eraseLastBatchIdForGroup(groupId: Id): Promise<void>;
+
 	purgeStorage(): Promise<void>
 
 	putLastUpdateTime(value: number): Promise<void>
@@ -724,6 +726,7 @@ export class DefaultEntityRestCache implements EntityRestCache {
 		for (const ship of removedShips) {
 			console.log("Lost membership on ", ship._id, ship.groupType)
 			await this.storage.deleteAllOwnedBy(ship.group)
+			await this.storage.eraseLastBatchIdForGroup(ship.group)
 		}
 	}
 
