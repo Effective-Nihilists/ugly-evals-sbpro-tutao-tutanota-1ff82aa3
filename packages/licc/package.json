@@ -16,7 +16,7 @@
 	"license": "GPL-3.0",
 	"dependencies": {
 		"commander": "9.3.0",
-		"json5": "^2.2.1",
+		"json5": "^2.2.3",
 		"zx": "6.1.0"
 	},
 	"devDependencies": {
