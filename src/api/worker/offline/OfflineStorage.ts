@@ -315,7 +315,7 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 			}
 
 		}
-	{
+		{
 			// delete the batch id for this group to prevent attempts to download events for a group we're no longer a member of
 			const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}`
 			await this.sqlCipherFacade.run(query, params)
