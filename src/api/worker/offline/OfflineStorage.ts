@@ -300,6 +300,10 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 			await this.sqlCipherFacade.run(query, params)
 		}
 		{
+			const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}`
+			await this.sqlCipherFacade.run(query, params)
+		}
+		{
 			// first, check which list Ids contain entities owned by the lost group
 			const {query, params} = sql`SELECT listId, type FROM list_entities WHERE ownerGroup = ${owner}`
 			const rangeRows = await this.sqlCipherFacade.all(query, params)
