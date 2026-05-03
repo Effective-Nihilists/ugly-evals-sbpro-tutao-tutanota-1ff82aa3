@@ -62,7 +62,7 @@ export type Attrs = {
 }
 
 export class MultiDayCalendarView implements Component<Attrs> {
-	private _redrawIntervalId: NodeJS.Timer | null = null
+	private _redrawIntervalId: ReturnType<typeof setTimeout> | null = null
 	private _longEventsDom: HTMLElement | null = null
 	private _domElements: HTMLElement[] = []
 	private _scrollPosition: number
