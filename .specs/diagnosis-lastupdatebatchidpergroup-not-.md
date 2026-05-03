@@ -1,4 +1,4 @@
-# Diagnosis: `lastUpdateBatchIdPerGroup` Not Cleared After Membership Loss
+# Fix Applied: `lastUpdateBatchIdPerGroup` Not Cleared After Membership Loss
 
 ## Symptom
 When a user loses membership in a group, the mapping `lastUpdateBatchIdPerGroupId` is not deleted. The system may continue trying to download event batches for groups the user no longer belongs to.
@@ -13,21 +13,20 @@ In `DefaultEntityRestCache.handleUpdatedUser()` (line 713-728), when a membershi
    - `getLastBatchIdForGroup()` (line 215-217) always returns `null` — doesn't retrieve stored batch IDs
    - `deleteAllOwnedBy()` (line 254-276) doesn't clear batch IDs for the lost group
 
-## Candidate Fix
+## Changes Made
 
-### Fix 1: Clear batch ID in `deleteAllOwnedBy` (chosen)
-Add batch ID deletion in the `deleteAllOwnedBy` method of both storage implementations:
+### `src/api/worker/offline/OfflineStorage.ts`
+- **`deleteAllOwnedBy`** (line 297): Added `DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}` as the first operation before deleting entities.
 
-- **`OfflineStorage.deleteAllOwnedBy`**: Add `DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}` before deleting entities.
-- **`EphemeralCacheStorage`**: 
-  1. Add a `Map<Id, Id>` field `lastBatchIdPerGroup` to store batch IDs
-  2. Implement `putLastBatchIdForGroup` to store in the map
-  3. Implement `getLastBatchIdForGroup` to retrieve from the map
-  4. In `deleteAllOwnedBy`, delete from the map: `this.lastBatchIdPerGroup.delete(owner)`
+### `src/api/worker/rest/EphemeralCacheStorage.ts`
+1. **Line 31**: Added `private lastBatchIdPerGroup: Map<Id, Id> = new Map()` field
+2. **Line 42**: Added `this.lastBatchIdPerGroup.clear()` in `deinit`
+3. **Line 217-218**: `getLastBatchIdForGroup` now returns `this.lastBatchIdPerGroup.get(groupId) ?? null` instead of always `null`
+4. **Line 221-222**: `putLastBatchIdForGroup` now calls `this.lastBatchIdPerGroup.set(groupId, batchId)` instead of no-op
+5. **Line 227**: `purgeStorage` now calls `this.lastBatchIdPerGroup.clear()`
+6. **Line 259**: `deleteAllOwnedBy` now calls `this.lastBatchIdPerGroup.delete(owner)`
 
-### Tradeoffs
-- This approach uses the existing `deleteAllOwnedBy` flow, keeping changes minimal
-- Alternative: add a new method like `deleteLastBatchIdForGroup` called separately in `handleUpdatedUser` — more verbose, duplicates the iteration
+No changes needed to `CacheStorageProxy` — it delegates all methods to the underlying storage.
 
 ## Verification
 - Run `test/tests/api/worker/rest/EntityRestCacheTest.js` test suite
