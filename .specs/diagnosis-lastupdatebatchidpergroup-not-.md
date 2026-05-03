@@ -1,30 +1,39 @@
-# Diagnosis: `lastUpdateBatchIdPerGroup` Not Cleared After Membership Loss
+# Fix: `lastUpdateBatchIdPerGroup` Not Cleared After Membership Loss
 
-## Symptom
-When a user's membership is removed from a group (e.g., calendar group), the cached `lastUpdateBatchIdPerGroup` entry for that group is not deleted. This causes the system to continue attempting to download event batches for groups the user no longer has access to.
+## Status: COMPLETE
 
-## Root Cause
-In `DefaultEntityRestCache.ts`, the `handleUpdatedUser()` method (lines 713-728) detects when a membership is removed and cleans up cached entities via `storage.deleteAllOwnedBy(ship.group)`. However, it does **not** delete the `lastUpdateBatchIdPerGroup` entry for the lost group.
+## Changes Applied
 
-The `CacheStorage` interface lacked a `deleteLastBatchIdForGroup` method, and none of its implementations (`OfflineStorage`, `EphemeralCacheStorage`, `CacheStorageProxy`) provided one.
+### 1. `src/api/worker/rest/DefaultEntityRestCache.ts`
+- **Line 158**: Added `deleteLastBatchIdForGroup(groupId: Id): Promise<void>;` to `CacheStorage` interface
+- **Line 730**: Added `await this.storage.deleteLastBatchIdForGroup(ship.group)` call in `handleUpdatedUser()` after `deleteAllOwnedBy()`
 
-## Candidate Fixes
+### 2. `src/api/worker/offline/OfflineStorage.ts`
+- **Lines 235-238**: Added implementation:
+  ```typescript
+  async deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+      const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${groupId}`
+      await this.sqlCipherFacade.run(query, params)
+  }
+  ```
 
-### Fix (chosen)
-Add `deleteLastBatchIdForGroup(groupId: Id): Promise<void>` to the `CacheStorage` interface and all implementations, then call it in `handleUpdatedUser()` alongside `deleteAllOwnedBy()`.
+### 3. `src/api/worker/rest/EphemeralCacheStorage.ts`
+- **Lines 219-221**: Added no-op implementation:
+  ```typescript
+  deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+      return Promise.resolve()
+  }
+  ```
 
-**Tradeoffs:**
-- Minimal change, follows existing patterns
-- Uses DELETE SQL query in OfflineStorage
-- EphemeralCacheStorage returns `Promise.resolve()` since it doesn't store batch IDs
-- CacheStorageProxy delegates to inner implementation
+### 4. `src/api/worker/rest/CacheStorageProxy.ts`
+- **Lines 125-127**: Added delegation:
+  ```typescript
+  deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+      return this.inner.deleteLastBatchIdForGroup(groupId)
+  }
+  ```
 
-### Alternative: Delete via putLastBatchIdForGroup with null
-Could overwrite with a null marker, but this adds complexity and semantic confusion.
-
-## Implementation Status
-Fix has been implemented in the FIX step across 4 files:
-1. `src/api/worker/rest/DefaultEntityRestCache.ts` - interface + call site
-2. `src/api/worker/offline/OfflineStorage.ts` - SQL DELETE implementation
-3. `src/api/worker/rest/EphemeralCacheStorage.ts` - no-op implementation
-4. `src/api/worker/rest/CacheStorageProxy.ts` - delegation implementation
+## Verification
+All 5 changes confirmed via direct file inspection:
+- grep + raw awk output confirms method presence in all 4 files
+- call site confirmed at DefaultEntityRestCache.ts:730
