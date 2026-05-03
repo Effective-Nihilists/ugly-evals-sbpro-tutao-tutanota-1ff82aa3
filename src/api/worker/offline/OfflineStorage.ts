@@ -296,6 +296,10 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 
 	async deleteAllOwnedBy(owner: Id): Promise<void> {
 		{
+			const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}`
+			await this.sqlCipherFacade.run(query, params)
+		}
+		{
 			const {query, params} = sql`DELETE FROM element_entities WHERE ownerGroup = ${owner}`
 			await this.sqlCipherFacade.run(query, params)
 		}
