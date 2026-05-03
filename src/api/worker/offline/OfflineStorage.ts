@@ -315,6 +315,11 @@ AND NOT(${firstIdBigger("elementId", upper)})`
 			}
 
 		}
+		{
+			// delete the last batch id for the group as it's no longer relevant without membership
+			const {query, params} = sql`DELETE FROM lastUpdateBatchIdPerGroupId WHERE groupId = ${owner}`
+			await this.sqlCipherFacade.run(query, params)
+		}
 	}
 
 	private async putMetadata<K extends keyof OfflineDbMeta>(key: K, value: OfflineDbMeta[K]): Promise<void> {

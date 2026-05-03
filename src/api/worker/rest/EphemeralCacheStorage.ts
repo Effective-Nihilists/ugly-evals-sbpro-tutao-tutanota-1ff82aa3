@@ -273,5 +273,6 @@ export class EphemeralCacheStorage implements CacheStorage {
 				cacheForType.delete(listId)
 			}
 		}
+		this.lastUpdateBatchIdPerGroup.delete(owner)
 	}
 }
