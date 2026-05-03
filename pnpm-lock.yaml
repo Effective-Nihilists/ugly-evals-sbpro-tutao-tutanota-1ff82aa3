@@ -117,6 +117,9 @@ importers:
       '@tutao/tutanota-test-utils':
         specifier: 3.103.2
         version: 3.103.2(ospec@https://codeload.github.com/tutao/ospec/tar.gz/0472107629ede33be4c4d19e89f237a6d7b0cb11)(testdouble@3.16.4)
+      '@types/node':
+        specifier: ^25.6.0
+        version: 25.6.0
       body-parser:
         specifier: 1.19.0
         version: 1.19.0
@@ -524,8 +527,8 @@ packages:
   '@types/node@17.0.45':
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
-  '@types/node@18.7.14':
-    resolution: {integrity: sha512-6bbDaETVi8oyIARulOE9qF1/Qdi/23z6emrUh0fNJRUmjznqrixD4MpGDdgOFk5Xb0m2H6Xu42JGdvAxaJR/wA==}
+  '@types/node@25.6.0':
+    resolution: {integrity: sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ==}
 
   '@types/plist@3.0.2':
     resolution: {integrity: sha512-ULqvZNGMv0zRFvqn8/4LSPtnmN4MfhlPNtJCTpKuIIxGVGZ2rYWzFXrvEBoh9CVyqSE7D6YFRJ1hydLHI6kbWw==}
@@ -2989,6 +2992,9 @@ packages:
   unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
 
+  undici-types@7.19.2:
+    resolution: {integrity: sha512-qYVnV5OEm2AW8cJMCpdV20CDyaN3g0AjDlOGf1OW4iaDEx8MwdtChUp4zu4H0VP3nDRF/8RKWH+IPp9uW0YGZg==}
+
   unique-filename@2.0.1:
     resolution: {integrity: sha512-ODWHtkkdx3IAR+veKxFV+VBkUMcN+FaqzUUd7IZzt+0zhDZFPFxhlqwPF3YQvMHx1TD0tdgYl+kuPnJ8E6ql7A==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
@@ -3680,7 +3686,7 @@ snapshots:
 
   '@types/better-sqlite3@7.4.2':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
 
   '@types/btoa-lite@1.0.0': {}
 
@@ -3696,21 +3702,21 @@ snapshots:
 
   '@types/fs-extra@9.0.13':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
 
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.1
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
     optional: true
 
   '@types/jsonwebtoken@8.5.9':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
 
   '@types/linkifyjs@2.1.4':
     dependencies:
@@ -3731,17 +3737,19 @@ snapshots:
 
   '@types/node-forge@1.0.0':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
 
   '@types/node@16.11.56': {}
 
   '@types/node@17.0.45': {}
 
-  '@types/node@18.7.14': {}
+  '@types/node@25.6.0':
+    dependencies:
+      undici-types: 7.19.2
 
   '@types/plist@3.0.2':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
       xmlbuilder: 15.1.1
     optional: true
 
@@ -3759,11 +3767,11 @@ snapshots:
 
   '@types/resolve@1.17.1':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
 
   '@types/scheduler@0.16.2': {}
 
@@ -3788,7 +3796,7 @@ snapshots:
 
   '@types/yauzl@2.10.0':
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
     optional: true
 
   abab@2.0.6: {}
@@ -5380,7 +5388,7 @@ snapshots:
 
   jest-worker@26.6.2:
     dependencies:
-      '@types/node': 18.7.14
+      '@types/node': 25.6.0
       merge-stream: 2.0.0
       supports-color: 7.2.0
 
@@ -6483,6 +6491,8 @@ snapshots:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
     optional: true
+
+  undici-types@7.19.2: {}
 
   unique-filename@2.0.1:
     dependencies:
