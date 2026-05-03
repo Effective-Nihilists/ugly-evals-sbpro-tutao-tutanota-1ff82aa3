@@ -117,9 +117,6 @@ importers:
       '@tutao/tutanota-test-utils':
         specifier: 3.103.2
         version: 3.103.2(ospec@https://codeload.github.com/tutao/ospec/tar.gz/0472107629ede33be4c4d19e89f237a6d7b0cb11)(testdouble@3.16.4)
-      '@types/node':
-        specifier: ^16.11.56
-        version: 16.11.56
       body-parser:
         specifier: 1.19.0
         version: 1.19.0
