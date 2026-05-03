@@ -6,7 +6,8 @@ export async function bootstrapTests() {
 			let randomBytes = crypto.randomBytes(bytes.length)
 			bytes.set(randomBytes)
 		},
-		subtle: "We have to do this, because node's crypto is not compatible with SubtleCrypto. Sorry." as unknown as SubtleCrypto
+		subtle: "We have to do this, because node's crypto is not compatible with SubtleCrypto. Sorry." as unknown as SubtleCrypto,
+		randomUUID: () => ""
 	}
     await random.addEntropy([
         {
