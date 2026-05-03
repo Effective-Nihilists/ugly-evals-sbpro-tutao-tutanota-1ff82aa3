@@ -216,6 +216,10 @@ export class EphemeralCacheStorage implements CacheStorage {
 		return Promise.resolve(null)
 	}
 
+	deleteLastBatchIdForGroup(groupId: Id): Promise<void> {
+		return Promise.resolve()
+	}
+
 	putLastBatchIdForGroup(groupId: Id, batchId: Id): Promise<void> {
 		return Promise.resolve()
 	}
