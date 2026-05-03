@@ -24,9 +24,9 @@
 		"testdouble": "3.16.4"
 	},
 	"devDependencies": {
-		"typescript": "4.5.4"
+		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"@types/node": "^25.6.0"
+		"@types/node": "^18.19.128"
 	}
 }

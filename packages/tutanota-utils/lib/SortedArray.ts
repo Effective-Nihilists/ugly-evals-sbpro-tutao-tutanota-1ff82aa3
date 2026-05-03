@@ -8,7 +8,7 @@ export type CompareFn<T> = (arg0: T, arg1: T) => number
  * @returns {number}
  */
 // It should be fine for 99% of use cases? worst case it just returns 0 always
-function defaultCompare<T extends Record<string, any>>(a: T, b: T): number {
+function defaultCompare<T>(a: T, b: T): number {
     return a < b ? -1 : a > b ? 1 : 0
 }
 
